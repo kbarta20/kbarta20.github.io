@@ -1,18 +1,18 @@
 <html>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <h1> World Sustainability Dataset </h1>
-    <svg width=800 height=800>
-    </svg>
+    
     <body>
+      <h1> World Sustainability Dataset </h1>
+
         <div id="chart"></div>
-      
+
         <script>
 
           async function loadData() {
           // Set up the chart dimensions
           var margin = { top: 20, right: 20, bottom: 30, left: 40 };
           var width = 800 - margin.left - margin.right;
-          var height = 400 - margin.top - margin.bottom;
+          var height = 800 - margin.top - margin.bottom;
       
           // Create the SVG element
           var svg = d3
