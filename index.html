@@ -24,7 +24,7 @@
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
       
           // Load the CSV file
-          const data = d3.csv('WorldSustainabilityDataset.csv', d3.autoType);
+          const data = await d3.csv('WorldSustainabilityDataset.csv', d3.autoType);
          // d3.csv("WorldSustainabilityDataset.csv").then(function(data) {
             // Convert numerical values from strings to numbers
           const dataArray = Object.values(data);
