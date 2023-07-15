@@ -29,10 +29,10 @@
             // Convert numerical values from strings to numbers
           const dataArray = Object.values(data);
             //const dataArray = Array.from(data, ([key,value]) => value);
-          dataArray.sort((a,b) => d3.descending(a["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"], b["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]));
+          data.sort((a,b) => d3.descending(a["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"], b["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]));
           console.log(dataArray);
           console.log(data);
-          dataArray.forEach(function(d) {
+          data.forEach(function(d) {
             d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"] = +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
             });
       
