@@ -23,10 +23,11 @@
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
       
           // Load the CSV file
-          const data = d3.csv('WorldSustainabilityDataset.csv');
+          const data = d3.csv('WorldSustainabilityDataset.csv', d3.autoType);
          // d3.csv("WorldSustainabilityDataset.csv").then(function(data) {
             // Convert numerical values from strings to numbers
-          const dataArray = Object.values(data);
+          const dataArray = Array.from(data, ([key,value]) => value);
+          dataArray.sort((a,b) => d3.descending(a["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"], b["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]));
 
           dataArray.forEach(function(d) {
             d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"] = +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
