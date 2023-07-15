@@ -1,7 +1,7 @@
 <html>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <h1> World Sustainability Dataset </h1>
-    <svg width=300 height=300>
+    <svg width=800 height=800>
     </svg>
     <body>
         <div id="chart"></div>
@@ -29,7 +29,8 @@
             // Convert numerical values from strings to numbers
           const dataArray = Array.from(data, ([key,value]) => value);
           dataArray.sort((a,b) => d3.descending(a["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"], b["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]));
-
+          console.log(dataArray);
+          console.log(data);
           dataArray.forEach(function(d) {
             d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"] = +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
             });
