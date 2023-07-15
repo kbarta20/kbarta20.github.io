@@ -33,11 +33,6 @@
             d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"] = +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
             });
       
-            // Sort the data in descending order
-            data.sort(function(a, b) {
-              return d3.descending(a["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"], b["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]);
-            });
-      
             // Set up the scales
             var xScale = d3
               .scaleBand()
