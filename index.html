@@ -40,14 +40,14 @@
               .scaleBand()
               .range([0, width])
               .padding(0.1)
-              .domain(data.map(function(d) {
+              .domain(dataArray.map(function(d) {
                 return d["Country Name"];
               }));
       
             var yScale = d3
               .scaleLinear()
               .range([height, 0])
-              .domain([0, d3.max(data, function(d) {
+              .domain([0, d3.max(dataArray, function(d) {
                 return d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
               })]);
       
