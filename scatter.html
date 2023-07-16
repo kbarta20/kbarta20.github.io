@@ -1,0 +1,77 @@
+<html>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style> circle {fill: lightblue; stroke: black;} </style>
+
+    <body>
+      <h1> World Sustainability Dataset </h1>
+         
+        <div id="chart"></div>
+
+        <script>
+
+                    async function loadData() {
+                    // Set up the chart dimensions
+                    var margin = { top: 50, right: 40, bottom: 50, left: 40 };
+                    var width = 800 - margin.left - margin.right;
+                    var height = 500 - margin.top - margin.bottom;
+                
+                    // Create the SVG element
+                    var svg = d3
+                        .select("#chart")
+                        .append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + 100 + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform","translate(50,80)");
+                
+                    // Load the CSV file
+                    const data = await d3.csv('https://kbarta20.github.io/WorldSustainabilityDataset.csv', d3.autoType);
+                        // Convert numerical values from strings to numbers
+                    const dataArray = Object.values(data);
+                        //const dataArray = Array.from(data, ([key,value]) => value);
+                        //Adjusted net national income per capita (annual % growth) - NY.ADJ.NNTY.PC.KD.ZG,"Adjusted net savings, excluding particulate emission damage (% of GNI) - NY.ADJ.SVNX.GN.ZS",Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS
+                        var CO2damage = data.map(d => +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]); var cxs= d3.scaleLog().base(10).domain([10,150]) .range([0,200]);
+                    var xs = CO2damage.map(value => cxs(value));
+
+                    var nationalIncome = data.map(d => +d["Adjusted net national income per capita (annual % growth) - NY.ADJ.NNTY.PC.KD.ZG"]); 
+                    var cys= d3.scaleLog().base(10) .domain([10,150]).range([200,0]); 
+                    var ys = nationalIncome.map(value => cys(value));
+
+                    var population = data.map(d => +d["Population, total - SP.POP.TOTL"]);
+                    var rs = population.map(value => value);
+
+                    var margin = 50;
+
+                    d3.select('svg') .append('g') .attr("transform","translate(50,50)") 
+                    .selectAll('circle') .data(data) .enter() .append('circle')
+                    .attr('cx',function(d,i) {return xs[i];}) 
+                    .attr('cy',function(d,i) {return ys[i];})  
+                    .attr('r', function(d,i) {return rs[i];});
+
+                    var yAxis = d3.axisLeft(cys)
+                    .tickValues([10, 20, 50, 100])
+                    .tickFormat(d3.format("~s"));
+
+                    d3.select("svg").append("g")
+                    .attr("transform","translate(50,50)")
+                    .call(yAxis);
+
+                    var xAxis = d3.axisBottom(cxs)
+                    .tickValues([10, 20, 50, 100])
+                    .tickFormat(d3.format("~s"));
+
+                    d3.select("svg").append("g")
+                    .attr("transform","translate(50,250)")
+                    .call(xAxis);
+                            }
+                
+          function filtered(dataArr) {
+            return dataArr['Year'] == '2018'
+          }
+          loadData().catch(function(error) {console.log(error);});
+          
+          </script>
+        
+      </body>
+
+</html>
