@@ -30,12 +30,14 @@
                     const dataArray = Object.values(data);
                         //const dataArray = Array.from(data, ([key,value]) => value);
                         //Adjusted net national income per capita (annual % growth) - NY.ADJ.NNTY.PC.KD.ZG,"Adjusted net savings, excluding particulate emission damage (% of GNI) - NY.ADJ.SVNX.GN.ZS",Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS
-                        var CO2damage = data.map(d => +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]); var cxs= d3.scaleLog().base(10).domain([10,150]) .range([0,200]);
+                    var CO2damage = data.map(d => +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]); 
+                    var cxs= d3.scaleBand().domain(data.map(function(d) { return d["Country Name"]})) .range([0,width]);
                     var xs = CO2damage.map(value => cxs(value));
 
-                    var nationalIncome = data.map(d => +d["Adjusted net national income per capita (annual % growth) - NY.ADJ.NNTY.PC.KD.ZG"]); 
-                    var cys= d3.scaleLog().base(10) .domain([10,150]).range([200,0]); 
-                    var ys = nationalIncome.map(value => cys(value));
+                    var electricity = data.map(d => +d["Access to electricity (% of population) - EG.ELC.ACCS.ZS"]); 
+                    var cys= d3.scaleLinear().domain([0, d3.max(data, function(d) { return d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
+                        })]).range([300,0]); 
+                    var ys = electricity.map(value => cys(value));
 
                     var population = data.map(d => +d["Population, total - SP.POP.TOTL"]);
                     var rs = population.map(value => value);
@@ -49,7 +51,7 @@
                     .attr('r', function(d,i) {return rs[i];});
 
                     var yAxis = d3.axisLeft(cys)
-                    .tickValues([10, 20, 50, 100])
+                    .tickValues([0, 10, 20, 50, 100])
                     .tickFormat(d3.format("~s"));
 
                     d3.select("svg").append("g")
@@ -57,11 +59,11 @@
                     .call(yAxis);
 
                     var xAxis = d3.axisBottom(cxs)
-                    .tickValues([10, 20, 50, 100])
+                    .tickValues([0, 10, 20, 40, 60, 80])
                     .tickFormat(d3.format("~s"));
 
                     d3.select("svg").append("g")
-                    .attr("transform","translate(50,250)")
+                    .attr("transform","translate(50,350)")
                     .call(xAxis);
                             }
                 
