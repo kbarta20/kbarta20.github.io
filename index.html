@@ -145,7 +145,7 @@
               .text("Adjusted savings: carbon dioxide damage (% of GNI)");
           }
           function filtered(dataArr) {
-            return dataArr['Continent'] == 'North America'
+            return (dataArr['Year'] == '2018') && (dataArr['Continent']=='North America')
           }
           loadData().catch(function(error) {console.log(error);});
           
