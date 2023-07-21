@@ -29,9 +29,9 @@
     The size of the circle corresponds to the population of the country.
 
   </p>
-  <div class="box" id="box1">Current</div>
+  <div class="box" id="box1">Chart 1</div>
   <div class="box" id="box2">Chart 2</div>
-  <div class="box" id="box3">Chart 3</div>
+  <div class="box" id="box3">Current</div>
   <script>
 
 
@@ -66,12 +66,6 @@
         d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"] = +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
       });
 
-      
-      var tooltip = d3.select("body")
-                .append("div")
-                .style("visibility", "hidden");
-
-
       // Set up the scales
       var xScale = d3
         .scaleBand()
@@ -105,15 +99,7 @@
         .attr("height", function (d) {
           return height - yScale(d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]);
         })
-        .attr("fill", "darkturquoise")
-        .on("mouseover", function (event, d) {
-                    tooltip.style("visibility", "visible").text(d["Country Name"]);
-                    tooltip.style("top", (d.pageY) + "px")
-                        .style("left", (d.pageX ) + "px");
-                })
-                .on("mousemove", function () { return tooltip.style("top", (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px"); })
-                .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
-;
+        .attr("fill", "darkturquoise");
 
       // Add axes
       svg
@@ -159,14 +145,6 @@
             break;
         }
       });
-
-       // create a tooltip
-       var tooltip = d3.select("#chart")
-             .append("div")
-            //.style("top", (d3.event.pageY-200)+"px")
-            //.style("left", (d3.event.pageX-100)+"px")
-               .style("position", "absolute")
-             .style("visibility", "hidden")
 
     }
     function filtered(dataArr) {
