@@ -2,13 +2,43 @@
 <html>
 <head>
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <style>circle { fill: lightblue; stroke: black; }</style>
+  <style>
+  
+    circle { fill: lightblue; stroke: black; }
+       
+     .box {
+      display: inline-block;
+      width: 80px;
+      height: 30px;
+      border: 1px solid black;
+      text-align: center;
+      line-height: 30px;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+  
+   </style>
 </head>
 <body>
+
   <h1>World Sustainability Dataset</h1>
+
   <div id="chart"></div>
 
+  <p> This chart shows a scatterplot of carbon dioxide damage savings
+    and GDP per capita of countries in North America. 
+    The size of the circle corresponds to the population of the country.
+
+  </p>
+  <div class="box" id="box1">Chart 1</div>
+  <div class="box" id="box2">Current</div>
+  <div class="box" id="box3">Chart 3</div>
+
+
   <script>
+    // Function to handle box click events and redirect to the corresponding pages
+    
 
     async function loadData() {
       // Set up the chart dimensions
@@ -69,7 +99,8 @@
         //.on("mouseover", mouseover)
         .on("mouseover", function(event, d){
                 tooltip.style("visibility", "visible").text(d["Country Name"]);
-                tooltip.style("left", event.pageX+"px").style("top", event.pageY+"px");})
+                tooltip.style("top", (d.pageY-200)+"px")
+                    .style("left", (d.pageX-100)+"px");})
         .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
@@ -89,24 +120,42 @@
             .text("GDP per capita (current US$)");
 
             svg.append("text")
-              .attr("transform","translate(250,500")
+              .attr("transform","translate(250,500)")
               .attr("x", 250)
               .attr("y", 440)
               .style("text-anchor", "middle")
               .text("Adjusted savings: carbon dioxide damage (% of GNI)");
 
-                    // create a tooltip
-        var tooltip = d3.select("#chart")
+  
+      //Axis Labels
+   
+
+    //add click event to the boxes
+    d3.selectAll(".box").on("click", function() {
+      var boxId = d3.select(this).attr("id");
+      switch (boxId) {
+        case "box1":
+          goTo("index.html");
+          break;
+        case "box2":
+          goTo("chart2.html");
+          break;
+        case "box3":
+          goTo("chart3.html");
+          break;
+        default:
+          break;
+      }
+    });
+  
+                  // create a tooltip
+                  var tooltip = d3.select("#chart")
         .append("div")
-        .style("top", d3.select(this).attr("cx") + "px")
-        .style("left", d3.select(this).attr("cx")+"px")
+        //.style("top", (d3.event.pageY-200)+"px")
+        //.style("left", (d3.event.pageX-100)+"px")
             .style("position", "absolute")
             .style("visibility", "hidden")
             .text("I'm a circle!");
-
-      //Axis Labels
-      
-   
 
   
     }
@@ -117,6 +166,11 @@
     loadData().catch(function (error) {
       console.log(error);
     });
+
+    
+    function goTo(page) {
+      window.location.href = page;
+    }
   </script>
 </body>
 </html>

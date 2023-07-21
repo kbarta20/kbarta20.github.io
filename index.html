@@ -1,59 +1,37 @@
 <html>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    
+    <style>
+      circle { fill: lightblue; stroke: black; }
+       
+       .box {
+        display: inline-block;
+        width: 80px;
+        height: 30px;
+        border: 1px solid black;
+        text-align: center;
+        line-height: 30px;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+      }
+    </style>
     <body>
       <h1> World Sustainability Dataset </h1>
-      <nav class="nav"></nav>
-      <script>var data1 = [
-        {
-            name: "home",
-            path: "/"
-        }, {
-            name: "reports",
-            children: [
-                {
-                    name: "report 1",
-                    path: "/reports/1"
-                }, {
-                    name: "report 2",
-                    path: "/reports/2"
-                }
-            ]
-        }
-    ];
-    
-    function Link() {
-        this.append("a")
-            .attr("href", function (x) { return x.path || '/#'; })
-            .text(function (x) { return x.name; });
-    }
-    
-    function NavItem() {
-        function render(d) {
-            var el = d3.select(this);
-            el.call(Link);
-            if (d.children) {
-                el.append("ul")
-                    .classed({"collapsed": true})
-                    .selectAll("li")
-                    .data(d.children, function (d) { return d.name; })
-                    .call(NavItem);
-            }
-        }
-        
-        this.enter().append("li").each(render);
-    }
-    
-    var root = d3
-        .select("nav.nav")
-        .append("ul")
-        .selectAll("li")
-        .data(data1, function (d) { return d.name; })
-        .call(NavItem); </script>
-    
-        <div id="chart"></div>
+      
+      <div id="chart"></div>
 
-        <script>
+  <p> This chart shows a scatterplot of carbon dioxide damage savings
+    and GDP per capita of countries in North America. 
+    The size of the circle corresponds to the population of the country.
+
+  </p>
+  <div class="box" id="box1">Current</div>
+  <div class="box" id="box2">Chart 2</div>
+  <div class="box" id="box3">Chart 3</div>
+      <script>
+
+
+
 
           async function loadData() {
           // Set up the chart dimensions
@@ -143,12 +121,36 @@
               .attr("dy", "1em")
               .style("text-anchor", "middle")
               .text("Adjusted savings: carbon dioxide damage (% of GNI)");
-          }
+         
+            
+
+    // add click event  to the boxes
+    d3.selectAll(".box").on("click", function() {
+      var boxId = d3.select(this).attr("id");
+      switch (boxId) {
+        case "box1":
+          goTo("index.html");
+          break;
+        case "box2":
+          goTo("test.html");
+          break;
+        case "box3":
+          goTo("chart3.html");
+          break;
+        default:
+          break;
+      }
+    });
+         
+            }
           function filtered(dataArr) {
             return (dataArr['Year'] == '2018') && (dataArr['Continent']=='North America')
           }
           loadData().catch(function(error) {console.log(error);});
-          
+             
+    function goTo(page) {
+      window.location.href = page;
+    }
           </script>
         
       </body>
