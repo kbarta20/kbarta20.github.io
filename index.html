@@ -1,184 +1,221 @@
+<!DOCTYPE html>
 <html>
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-  circle {
-    fill: lightblue;
-    stroke: black;
-  }
 
-  .box {
-    display: inline-block;
-    width: 80px;
-    height: 30px;
-    border: 1px solid black;
-    text-align: center;
-    line-height: 30px;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-  }
-</style>
+<head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        circle {
+            
+            stroke: black;
+        }
+
+        .box {
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+            border: 1px solid black;
+            text-align: center;
+            line-height: 30px;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
 
 <body>
-  <h1> World Sustainability Dataset </h1>
 
-  <div id="chart"></div>
+    <h1>World Sustainability Dataset</h1>
 
-  <p> This chart shows a scatterplot of carbon dioxide damage savings
-    and GDP per capita of countries in North America.
-    The size of the circle corresponds to the population of the country.
+    <p> This visualization explores various sustainability factors and the relationships between them.
+        Explore the charts using the boxes at the bottom of the page.
+    </p>
 
-  </p>
-  <div class="box" id="box1">Current</div>
-  <div class="box" id="box2">Chart 2</div>
-  <div class="box" id="box3">Chart 3</div>
-  <script>
+    <div id="chart"></div>
+
+    <p> This chart shows a scatterplot of carbon dioxide damage savings
+        and GDP per capita of countries in 2018.
+        The size of the circle corresponds to the population of the country.
+
+        Why do damage costs for carbon dioxide vary so widely from country to country? How does this value relate to other statistics?
+
+        Adjusted savings: carbon dioxide damage refers to the cost of damage from carbon dioxide emissions. These emissions can be from fossil fuels or the manufacture of cement. The World Bank estimates that it costs US$30 per ton of CO2.
+        This value gives an idea of how much carbon dioxide emissions are costing a country.
+        Many countries with a lower GDP encounter more costs associated with carbon dioxide damage.
+
+        
+    </p>
+    <div class="box" id="box1">Current</div>
+    <div class="box" id="box2">Chart 2</div>
+    <div class="box" id="box3">Chart 3</div>
+
+
+    <script>
+        // Function to handle box click events and redirect to the corresponding pages
+
+
+        async function loadData() {
+            // Set up the chart dimensions
+            var margin = { top: 50, right: 40, bottom: 50, left: 60 };
+            var width = 800 - margin.left - margin.right;
+            var height = 500 - margin.top - margin.bottom;
+
+            // Create the SVG element
+            var svg = d3
+                .select("#chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            const data = await d3.csv('https://kbarta20.github.io/WorldSustainabilityDataset.csv', d3.autoType);
+            // Convert numerical values from strings to numbers
+            const dataArray = Object.values(data);
+            var dataArrayF = dataArray.filter(filtered);
+
+            // Generate random data within the specified ranges
+            //var numDataPoints = 50;
+            var CO2damage = dataArrayF.map(d => +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]);
+            var xs = d3.scaleLinear().domain([0, 3]).range([0, width]);
+
+            // Adjust the y-scale domain based on the actual data values for "Access to electricity"
+            var electricity = dataArrayF.map(d => +d["GDP per capita (current US$) - NY.GDP.PCAP.CD"]);
+            var yDomain = d3.extent(electricity); // Get the min and max values for the domain
+            var ys = d3.scaleLinear().domain([yDomain[0] - 5, yDomain[1] + 5]).range([height, 0]);
+
+            var population = dataArrayF.map(d => +d["Population, total - SP.POP.TOTL"]);
+            var rs = d3.scaleLinear().domain([0, d3.max(population)]).range([5, 70]);
 
 
 
-
-    async function loadData() {
-      // Set up the chart dimensions
-      var margin = { top: 50, right: 40, bottom: 50, left: 40 };
-      var width = 800 - margin.left - margin.right;
-      var height = 500 - margin.top - margin.bottom;
-
-      // Create the SVG element
-      var svg = d3
-        .select("#chart")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + 100 + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(50,80)");
-
-      // Load the CSV file
-      const data = await d3.csv('https://kbarta20.github.io/WorldSustainabilityDataset.csv', d3.autoType);
-      // Convert numerical values from strings to numbers
-      const dataArray = Object.values(data);
-      //const dataArray = Array.from(data, ([key,value]) => value);
-      data.sort((a, b) => d3.descending(a["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"], b["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]));
-      //console.log(dataArray);
-      //console.log(data)
-      var dataArrayF = dataArray.filter(filtered);
-      console.log(dataArrayF)
-      dataArrayF.forEach(function (d) {
-        d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"] = +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
-      });
-
-      
-      var tooltip = d3.select("body")
+            var tooltip = d3.select("body")
                 .append("div")
                 .style("visibility", "hidden");
 
-
-      // Set up the scales
-      var xScale = d3
-        .scaleBand()
-        .range([0, width])
-        .padding(0.1)
-        .domain(dataArrayF.map(function (d) {
-          return d["Country Name"];
-        }));
-
-      var yScale = d3
-        .scaleLinear()
-        .range([height, 0])
-        .domain([0, d3.max(dataArrayF, function (d) {
-          return d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
-        })]);
-
-      // Create the bars
-      svg
-        .selectAll(".bar")
-        .data(dataArray)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", function (d) {
-          return xScale(d["Country Name"]);
-        })
-        .attr("width", xScale.bandwidth())
-        .attr("y", function (d) {
-          return yScale(d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]);
-        })
-        .attr("height", function (d) {
-          return height - yScale(d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]);
-        })
-        .attr("fill", "darkturquoise")
-        .on("mouseover", function (event, d) {
+            
+            svg
+                .selectAll('circle')
+                .data(dataArrayF)
+                .enter()
+                .append('circle')
+                //.attr("id", "circleTooltip")
+                .attr('cx', function (d) { return xs(d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]); })
+                .attr('cy', function (d) { return ys(d["GDP per capita (current US$) - NY.GDP.PCAP.CD"]); })
+                .attr('r', function (d) { return rs(d["Population, total - SP.POP.TOTL"]); })
+                .attr("fill", function(d) {
+                        var cont = d['Continent']
+                        console.log(cont);
+                        if (cont == 'North America') {
+                        return "lightblue";
+                        } else if (cont == 'Africa') {
+                        return "tomato";
+                        }
+                        else if (cont == 'South America') {
+                        return "gold";
+                        }
+                        else if (cont == 'Asia') {
+                        return "teal";
+                        }
+                        else if (cont == 'Oceania') {
+                            return "violet";
+                        }
+                        else if (cont == 'Europe') {
+                            return "navy";
+                        }
+                        return "yellow";
+                    })
+                //.on("mouseover", mouseover)
+                .on("mouseover", function (event, d) {
                     tooltip.style("visibility", "visible").text(d["Country Name"]);
-                    tooltip.style("top", (d.pageY) + "px")
+                    tooltip.style("top", (d.pageY ) + "px")
                         .style("left", (d.pageX ) + "px");
                 })
-                .on("mousemove", function () { return tooltip.style("top", (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px"); })
+                .on("mousemove", function () { return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px"); })
                 .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
-;
 
-      // Add axes
-      svg
-        .append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale))
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("transform", "rotate(-45)");
+            //legend
+            svg.append("circle").attr("cx",450).attr("cy",0).attr("r", 6).style("fill", "tomato")
+            svg.append("circle").attr("cx",450).attr("cy",20).attr("r", 6).style("fill", "gold")
+            svg.append("circle").attr("cx",450).attr("cy",40).attr("r", 6).style("fill", "green")
+            svg.append("circle").attr("cx",450).attr("cy",60).attr("r", 6).style("fill", "lightblue")
+            svg.append("circle").attr("cx",450).attr("cy",80).attr("r", 6).style("fill", "navy")
+            svg.append("circle").attr("cx",450).attr("cy",100).attr("r", 6).style("fill", "violet")
+            svg.append("text").attr("x", 470).attr("y", 0).text("Africa").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("text").attr("x", 470).attr("y", 20).text("South America").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("text").attr("x", 470).attr("y", 40).text("Asia").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("text").attr("x", 470).attr("y", 60).text("North America").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("text").attr("x", 470).attr("y", 80).text("Europe").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("text").attr("x", 470).attr("y", 100).text("Oceania").style("font-size", "15px").attr("alignment-baseline","middle")
 
-      svg.append("g").call(d3.axisLeft(yScale));
+            var yAxis = d3.axisLeft(ys).ticks(10).tickFormat(d3.format("~s"));
+            svg.append("g").call(yAxis);
 
-      // Add axis labels
-      svg.append("text")
-        .attr("transform", `translate(${width / 2},${height + margin.top + 30})`)
-        .style("text-anchor", "middle")
-        .text("Countries");
+            var xAxis = d3.axisBottom(xs).tickValues([0, 0.5, 1.0, 1.5, 2, 2.5, 3, 3.5, 4])//.tickFormat(d3.format("~s"));
+            svg.append("g").attr("transform", "translate(0," + height + ")").call(xAxis);
 
-      svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left + 10)
-        .attr("x", 0 - (height / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("Adjusted savings: carbon dioxide damage (% of GNI)");
+            svg.append("text")
+                .attr("transform", "translate(220,440)")
+                //.attr("x", 250)
+                //.attr("y", 200)
+                .style("text-anchor", "middle")
+                .text("Adjusted savings: carbon dioxide damage (% of GNI)");
 
 
 
-      // add click event  to the boxes
-      d3.selectAll(".box").on("click", function () {
-        var boxId = d3.select(this).attr("id");
-        switch (boxId) {
-          case "box1":
-            goTo("index.html");
-            break;
-          case "box2":
-            goTo("test.html");
-            break;
-          case "box3":
-            goTo("chart3.html");
-            break;
-          default:
-            break;
-        }
-      });
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left + 10)
+                .attr("x", 0 - (height / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("GDP per capita (current US$)");
 
-       // create a tooltip
-       var tooltip = d3.select("#chart")
+
+            //Axis Labels
+
+
+            //add click event to the boxes
+            d3.selectAll(".box").on("click", function () {
+                var boxId = d3.select(this).attr("id");
+                switch (boxId) {
+                    case "box1":
+                        goTo("index.html");
+                        break;
+                    case "box2":
+                        goTo("chart2.html");
+                        break;
+                    case "box3":
+                        goTo("chart3.html");
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            // create a tooltip
+            var tooltip = d3.select("#chart")
              .append("div")
             //.style("top", (d3.event.pageY-200)+"px")
             //.style("left", (d3.event.pageX-100)+"px")
                .style("position", "absolute")
              .style("visibility", "hidden")
+            // .text("I'm a circle!");
 
-    }
-    function filtered(dataArr) {
-      return (dataArr['Year'] == '2018') && (dataArr['Continent'] == 'North America')
-    }
-    loadData().catch(function (error) { console.log(error); });
 
-    function goTo(page) {
-      window.location.href = page;
-    }
-  </script>
+        }
 
+        function filtered(dataArr) {
+            return (dataArr['Year'] == '2018')// && (dataArr['Continent'] == 'North America')
+        }
+        loadData().catch(function (error) {
+            console.log(error);
+        });
+
+
+        function goTo(page) {
+            window.location.href = page;
+        }
+    </script>
 </body>
 
 </html>

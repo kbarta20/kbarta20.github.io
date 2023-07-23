@@ -1,0 +1,217 @@
+<html>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
+    <style>
+      circle { fill: lightblue; stroke: black; }
+       
+       .box {
+        display: inline-block;
+        width: 80px;
+        height: 30px;
+        border: 1px solid black;
+        text-align: center;
+        line-height: 30px;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+      }
+    </style>
+    <body>
+      <h1> World Sustainability Dataset </h1>
+      
+      <h2> Carbon Dioxide Damage in Europe and Sub-Saharan Africa</h2>
+      <p>How does carbon dioxide damage relate to income in different regions?
+        This chart compares carbon dioxide damage vs income in 2 different regions: Europe/Northern America and Sub-saharan
+        Africa.
+        These regions have very different histories in terms of development..
+    </p>
+    <div name="annotation" opacity =1>
+      
+    </div>
+      <div id="chart"></div>
+
+  <p> This chart shows a scatterplot of carbon dioxide damage savings
+    and GDP per capita of countries in North America. 
+    The size of the circle corresponds to the population of the country.
+
+  </p>
+  <div class="box" id="box1">Chart 1</div>
+  <div class="box" id="box2">Current</div>
+  <div class="box" id="box3">Chart 3</div>
+      <script>
+
+        const annotations = [
+          {
+            note: {
+              label: "Many, but not all, European/Northern American countries have higher CO2 damage costs than Sub-Saharan African countries.",
+            //  title: 
+            },
+            x: 200,
+            y: 200,
+            dy: -100,
+            dx: 200
+            
+          }
+        ]
+
+
+          async function loadData() {
+          // Set up the chart dimensions
+          var margin = { top: 50, right: 40, bottom: 50, left: 40 };
+          var width = 1000 - margin.left - margin.right;
+          var height = 500 - margin.top - margin.bottom;
+      
+          const makeAnnotations = d3.annotation()
+                .annotations(annotations)
+          
+          // Create the SVG element
+          var svg = d3
+            .select("#chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + 100 + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform","translate(50,80)")
+            .call(makeAnnotations);
+
+          // Load the CSV file
+          const data = await d3.csv('https://kbarta20.github.io/WorldSustainabilityDataset.csv', d3.autoType);
+            // Convert numerical values from strings to numbers
+          const dataArray = Object.values(data);
+            //const dataArray = Array.from(data, ([key,value]) => value);
+          data.sort((a,b) => d3.descending(a["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"], b["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]));
+          //console.log(dataArray);
+          //console.log(data)
+          var dataArrayF = dataArray.filter(filtered);
+          console.log(dataArrayF)
+          dataArrayF.forEach(function(d) {
+            d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"] = +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
+            });
+      
+            //add annotation
+            
+            // Set up the scales
+            var xScale = d3
+              .scaleBand()
+              .range([0, width])
+              .padding(0.1)
+              .domain(dataArrayF.map(function(d) {
+                return d["Country Name"];
+              }));
+      
+            var yScale = d3
+              .scaleLinear()
+              .range([height, 0])
+              .domain([0, d3.max(dataArrayF, function(d) {
+                return d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
+              })]);
+      
+              
+
+           // var tooltip = d3.select("body")
+             //   .append("div")
+               // .style("visibility", "hidden");
+
+             // create a tooltip
+             var tooltip = d3.select("#chart")
+             .append("div")
+            //.style("top", (d3.event.pageY-200)+"px")
+            //.style("left", (d3.event.pageX-100)+"px")
+               .style("position", "absolute")
+             .style("visibility", "hidden")
+             .style("background", "white")
+            // Create the bars
+            svg
+              .selectAll(".bar")
+              .data(dataArrayF)
+              .enter()
+              .append("rect")
+              .attr("class", "bar")
+              .attr("x", function(d) {
+                return xScale(d["Country Name"]);
+              })
+              .attr("width", xScale.bandwidth())
+              .attr("y", function(d) {
+                return yScale(d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]);
+              })
+              .attr("height", function(d) {
+                return height - yScale(d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]);
+              })
+              .attr("fill", function(d) {
+                if ( d['Continent'] == 'Africa' ) {
+                    return "tomato";
+                }
+                else if (d['Continent'] == 'Europe') {
+                  return "navy";
+                }
+                return "yellow";//           }"darkturquoise");
+          })
+          .on("mouseover", function (event, d) {
+                    tooltip.style("visibility", "visible").text(d["Country Name"]);
+                    tooltip.style("top", (event.pageY ) + "px")
+                        .style("left", (event.pageX ) + "px");
+                })
+                .on("mousemove", function () { return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px"); })
+                .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
+;
+            // Add axes
+            svg
+              .append("g")
+              .attr("transform","translate(0," + height + ")")
+              .call(d3.axisBottom(xScale))
+              .selectAll("text")
+              .style("text-anchor", "end")
+              .attr("transform","rotate(-45)");
+      
+            svg.append("g").call(d3.axisLeft(yScale));
+
+                        // Add axis labels
+            svg.append("text")
+              .attr("transform", `translate(${width / 2},${height + margin.top +30})`)
+              .style("text-anchor", "middle")
+              .text("Countries");
+
+            svg.append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("y", 0 - margin.left + 10)
+              .attr("x", 0 - (height / 2))
+              .attr("dy", "1em")
+              .style("text-anchor", "middle")
+              .text("Adjusted savings: carbon dioxide damage (% of GNI)");
+         
+          
+
+    // add click event  to the boxes
+    d3.selectAll(".box").on("click", function() {
+      var boxId = d3.select(this).attr("id");
+      switch (boxId) {
+        case "box1":
+          goTo("index.html");
+          break;
+        case "box2":
+          goTo("chart2.html");
+          break;
+        case "box3":
+          goTo("chart3.html");
+          break;
+        default:
+          break;
+      }
+    });
+         
+            }
+          function filtered(dataArr) {
+            return (dataArr['Year'] == '2018') && (dataArr['Continent']=='Africa') 
+            || (dataArr['Continent'] == 'Europe')
+          }
+          loadData().catch(function(error) {console.log(error);});
+             
+    function goTo(page) {
+      window.location.href = page;
+    }
+          </script>
+        
+      </body>
+
+</html>
