@@ -5,7 +5,7 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         circle {
-            
+
             stroke: black;
         }
 
@@ -27,32 +27,41 @@
 
     <h1>World Sustainability Dataset</h1>
 
-    <p> Final consumption expenditure is the sum of household private consumption and goverment consumption. It varies widely between countries. How is this value related to other factors in the country?
-        Resource rich countries have a higher potential for consumption in the future, but generally richer countries have higher expenditures
-    
+    <p> Final consumption expenditure is the sum of household private consumption and goverment consumption. It varies
+        widely between countries. How is this value related to other factors in the country?
+        Resource rich countries have a higher potential for consumption in the future, but generally richer countries
+        have higher expenditures
+
         (USE INCOME IN THIS CHART)
-    
-        Adjusted net national income is GNI minus consumption/natural resource depletion. Countries with abundant natural resources but lower income will see higher depletion of those natural resources.
+
+        Adjusted net national income is GNI minus consumption/natural resource depletion. Countries with abundant
+        natural resources but lower income will see higher depletion of those natural resources.
         Net national income can give a different view from GDP.
-        Standard of living increases in less wealthy countries is tied to economic growth that will involve natural resources and their consumption. Net national income can give a good view of the potential increases in future consumption.
-          </p>
+        Standard of living increases in less wealthy countries is tied to economic growth that will involve natural
+        resources and their consumption. Net national income can give a good view of the potential increases in future
+        consumption.
+    </p>
 
     <div id="chart"></div>
 
     <p> This chart shows a scatterplot of carbon dioxide damage savings
         and Adjusted net national income in % growth in 2018.
-        It is the same chart as presented in the first slide, except that it uses net national income growth instead of GDP.
+        It is the same chart as presented in the first slide, except that it uses net national income growth instead of
+        GDP.
 
         As you can see, it offers a very different picture. Some countries are experiencing negative net income growth.
         This could be due to: ????
 
-        Why do damage costs for carbon dioxide vary so widely from country to country? How does this value relate to other statistics?
+        Why do damage costs for carbon dioxide vary so widely from country to country? How does this value relate to
+        other statistics?
 
-        Adjusted savings: carbon dioxide damage refers to the cost of damage from carbon dioxide emissions. These emissions can be from fossil fuels or the manufacture of cement. The World Bank estimates that it costs US$30 per ton of CO2.
+        Adjusted savings: carbon dioxide damage refers to the cost of damage from carbon dioxide emissions. These
+        emissions can be from fossil fuels or the manufacture of cement. The World Bank estimates that it costs US$30
+        per ton of CO2.
         This value gives an idea of how much carbon dioxide emissions are costing a country.
         Many countries with a lower GDP encounter more costs associated with carbon dioxide damage.
 
-        
+
     </p>
     <div class="box" id="box1">Chart 1</div>
     <div class="box" id="box2">Chart 2</div>
@@ -102,7 +111,7 @@
                 .style("visibility", "hidden")
                 .style("background", "white");
 
-            
+
             svg
                 .selectAll('circle')
                 .data(dataArrayF)
@@ -112,49 +121,49 @@
                 .attr('cx', function (d) { return xs(d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]); })
                 .attr('cy', function (d) { return ys(d["Adjusted net national income per capita (annual % growth) - NY.ADJ.NNTY.PC.KD.ZG"]); })
                 .attr('r', function (d) { return rs(d["Population, total - SP.POP.TOTL"]); })
-                .attr("fill", function(d) {
-                        var reg = d['World Regions (UN SDG Definition)'];
-                        //console.log(reg);
-                        if (reg == 'Europe and Northern America')
-                            return "navy";
-                        else if (reg == 'Sub-Saharan Africa')
-                            return "tomato";
-                /*
-                        var cont = d['Continent']
-                        console.log(cont);
-                        if (cont == 'North America') {
-                        return "lightblue";
-                        } else if (cont == 'Africa') {
+                .attr("fill", function (d) {
+                    var reg = d['World Regions (UN SDG Definition)'];
+                    //console.log(reg);
+                    if (reg == 'Europe and Northern America')
+                        return "navy";
+                    else if (reg == 'Sub-Saharan Africa')
                         return "tomato";
-                        }
-                        else if (cont == 'South America') {
-                        return "gold";
-                        }
-                        else if (cont == 'Asia') {
-                        return "teal";
-                        }
-                        else if (cont == 'Oceania') {
-                            return "violet";
-                        }
-                        else if (cont == 'Europe') {
-                            return "navy";
-                        }
-                        return "yellow";*/
-                    })
+                    /*
+                            var cont = d['Continent']
+                            console.log(cont);
+                            if (cont == 'North America') {
+                            return "lightblue";
+                            } else if (cont == 'Africa') {
+                            return "tomato";
+                            }
+                            else if (cont == 'South America') {
+                            return "gold";
+                            }
+                            else if (cont == 'Asia') {
+                            return "teal";
+                            }
+                            else if (cont == 'Oceania') {
+                                return "violet";
+                            }
+                            else if (cont == 'Europe') {
+                                return "navy";
+                            }
+                            return "yellow";*/
+                })
                 //.on("mouseover", mouseover)
                 .on("mouseover", function (event, d) {
                     tooltip.style("visibility", "visible").text(d["Country Name"]);
-                    tooltip.style("top", (d.pageY ) + "px")
-                        .style("left", (d.pageX ) + "px");
+                    tooltip.style("top", (d.pageY) + "px")
+                        .style("left", (d.pageX) + "px");
                 })
                 .on("mousemove", function () { return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px"); })
                 .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
 
             //legend
-            svg.append("circle").attr("cx",600).attr("cy",0).attr("r", 6).style("fill", "tomato")
-            svg.append("circle").attr("cx",600).attr("cy",20).attr("r", 6).style("fill", "navy")
-            svg.append("text").attr("x", 620).attr("y", 0).text("Sub-Saharan Africa").style("font-size", "15px").attr("alignment-baseline","middle")
-            svg.append("text").attr("x", 620).attr("y", 20).text("Europe & Northern America").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("circle").attr("cx", 600).attr("cy", 0).attr("r", 6).style("fill", "tomato")
+            svg.append("circle").attr("cx", 600).attr("cy", 20).attr("r", 6).style("fill", "navy")
+            svg.append("text").attr("x", 620).attr("y", 0).text("Sub-Saharan Africa").style("font-size", "15px").attr("alignment-baseline", "middle")
+            svg.append("text").attr("x", 620).attr("y", 20).text("Europe & Northern America").style("font-size", "15px").attr("alignment-baseline", "middle")
 
             var yAxis = d3.axisLeft(ys).ticks(10).tickFormat(d3.format("~s"));
             svg.append("g").call(yAxis);
@@ -203,12 +212,12 @@
 
             // create a tooltip
             var tooltip = d3.select("#chart")
-             .append("div")
-            //.style("top", (d3.event.pageY-200)+"px")
-            //.style("left", (d3.event.pageX-100)+"px")
-               .style("position", "absolute")
-             .style("visibility", "hidden")
-             .style("background", "white");
+                .append("div")
+                //.style("top", (d3.event.pageY-200)+"px")
+                //.style("left", (d3.event.pageX-100)+"px")
+                .style("position", "absolute")
+                .style("visibility", "hidden")
+                .style("background", "white");
             // .text("I'm a circle!");
 
 
@@ -216,8 +225,8 @@
 
         function filtered(dataArr) {
             return ((dataArr['Year'] == '2018')//&& (dataArr['Continent'] == 'North America')
-            && ((dataArr['World Regions (UN SDG Definition)']=='Europe and Northern America') 
-            || (dataArr['World Regions (UN SDG Definition)'] == 'Sub-Saharan Africa')));
+                && ((dataArr['World Regions (UN SDG Definition)'] == 'Europe and Northern America')
+                    || (dataArr['World Regions (UN SDG Definition)'] == 'Sub-Saharan Africa')));
         }
         loadData().catch(function (error) {
             console.log(error);

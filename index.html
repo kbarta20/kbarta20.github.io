@@ -2,80 +2,82 @@
 <html>
 
 <head>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="chart1.js"></script>
-    <style>
-        circle {
-            
-            stroke: black;
-        }
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="chart1.js"></script>
+  <style>
+    circle {
 
-        .box {
-            display: inline-block;
-            width: 80px;
-            height: 30px;
-            border: 1px solid black;
-            text-align: center;
-            line-height: 30px;
-            margin: 0;
-            padding: 0;
-            cursor: pointer;
-        }
-    </style>
+      stroke: black;
+    }
+
+    .box {
+      display: inline-block;
+      width: 80px;
+      height: 30px;
+      border: 1px solid black;
+      text-align: center;
+      line-height: 30px;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
 
-    <h1>World Sustainability Dataset</h1>
+  <h1>World Sustainability Dataset</h1>
 
-    <p> This visualization explores various sustainability factors and the relationships between them.
-        Explore the charts using the boxes at the bottom of the page.
+  <p> This visualization explores various sustainability factors and the relationships between them.
+    Explore the charts using the boxes at the bottom of the page.
 
-        Explore the current chart by selecting a Continent or World.
-    </p>
+    Explore the current chart by selecting a Continent or World.
+  </p>
 
-    <div id="buttons">
-      <!-- Add the seven buttons -->
-      <button onclick="loadData('World')">World</button>
-      <button onclick="loadData('Africa')">Africa</button>
-      <button onclick="loadData('North America')">North America</button>
-      <button onclick="loadData('Europe')">Europe</button>
-      <button onclick="loadData('South America')">South America</button>
-      <button onclick="loadData('Oceania')">Oceania</button>
-    </div>
+  <div id="buttons">
+    <!-- Add the seven buttons -->
+    <button onclick="loadData('World')">World</button>
+    <button onclick="loadData('Africa')">Africa</button>
+    <button onclick="loadData('North America')">North America</button>
+    <button onclick="loadData('Europe')">Europe</button>
+    <button onclick="loadData('South America')">South America</button>
+    <button onclick="loadData('Oceania')">Oceania</button>
+  </div>
 
-    <div id="chart"></div>
+  <div id="chart"></div>
 
-    <p> This chart shows a scatterplot of carbon dioxide damage savings
-        and GDP per capita of countries in 2018.
-        The size of the circle corresponds to the population of the country.
+  <p> This chart shows a scatterplot of carbon dioxide damage savings
+    and GDP per capita of countries in 2018.
+    The size of the circle corresponds to the population of the country.
 
-        Why do damage costs for carbon dioxide vary so widely from country to country? How does this value relate to other statistics?
+    Why do damage costs for carbon dioxide vary so widely from country to country? How does this value relate to other
+    statistics?
 
-        Adjusted savings: carbon dioxide damage refers to the cost of damage from carbon dioxide emissions. These emissions can be from fossil fuels or the manufacture of cement. The World Bank estimates that it costs US$30 per ton of CO2.
-        This value gives an idea of how much carbon dioxide emissions are costing a country.
-        Many countries with a lower GDP encounter more costs associated with carbon dioxide damage.
-
-        
-    </p>
-    <div class="box" id="box1">Current</div>
-    <div class="box" id="box2">Chart 2</div>
-    <div class="box" id="box3">Chart 3</div>
+    Adjusted savings: carbon dioxide damage refers to the cost of damage from carbon dioxide emissions. These emissions
+    can be from fossil fuels or the manufacture of cement. The World Bank estimates that it costs US$30 per ton of CO2.
+    This value gives an idea of how much carbon dioxide emissions are costing a country.
+    Many countries with a lower GDP encounter more costs associated with carbon dioxide damage.
 
 
-    <script>
+  </p>
+  <div class="box" id="box1">Current</div>
+  <div class="box" id="box2">Chart 2</div>
+  <div class="box" id="box3">Chart 3</div>
 
-        loadData("World").catch(function (error) {
-            console.log(error);
-        });
+
+  <script>
+
+    loadData("World").catch(function (error) {
+      console.log(error);
+    });
 
 
-        function goTo(page) {
-            window.location.href = page;
-        }
+    function goTo(page) {
+      window.location.href = page;
+    }
 
-        
-    </script>
+
+  </script>
 </body>
 
 </html>

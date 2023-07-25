@@ -1,6 +1,6 @@
 
-async function loadData( region ) {
-    
+async function loadData(region) {
+
     console.log(region);
     d3.selectAll("svg").remove();
     // Set up the chart dimensions
@@ -23,20 +23,20 @@ async function loadData( region ) {
     if (region == "World") {
         var dataArrayF = dataArray.filter(filtered);
         console.log("its world");
-//        return (dataArray['Year'] == '2018') //&& (dataArr['Continent'] == reg)
+        //        return (dataArray['Year'] == '2018') //&& (dataArr['Continent'] == reg)
     }
     else {
         console.log("now its " + region);
-        var dataArrayF = dataArray.filter( function filteredR(da) {
-          //  console.log(region);
-             return (da['Year'] == '2018') && (da['Continent'] == region);
-    })
-}
-   // if (region !== "World") {
-        //filter by region
-     //   var newdataArrayF = dataArrayF.filter(regionize, d, region) 
-          //  return(d['Continent'] === region);
-       // )
+        var dataArrayF = dataArray.filter(function filteredR(da) {
+            //  console.log(region);
+            return (da['Year'] == '2018') && (da['Continent'] == region);
+        })
+    }
+    // if (region !== "World") {
+    //filter by region
+    //   var newdataArrayF = dataArrayF.filter(regionize, d, region) 
+    //  return(d['Continent'] === region);
+    // )
     //}
     // Generate random data within the specified ranges
     //var numDataPoints = 50;
@@ -56,7 +56,7 @@ async function loadData( region ) {
         .append("div")
         .style("visibility", "hidden");
 
-    
+
     svg
         .selectAll('circle')
         .data(dataArrayF)
@@ -66,50 +66,50 @@ async function loadData( region ) {
         .attr('cx', function (d) { return xs(d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]); })
         .attr('cy', function (d) { return ys(d["GDP per capita (current US$) - NY.GDP.PCAP.CD"]); })
         .attr('r', function (d) { return rs(d["Population, total - SP.POP.TOTL"]); })
-        .attr("fill", function(d) {
-                var cont = d['Continent']
-               // console.log(cont);
-                if (cont == 'North America') {
+        .attr("fill", function (d) {
+            var cont = d['Continent']
+            // console.log(cont);
+            if (cont == 'North America') {
                 return "lightblue";
-                } else if (cont == 'Africa') {
+            } else if (cont == 'Africa') {
                 return "tomato";
-                }
-                else if (cont == 'South America') {
+            }
+            else if (cont == 'South America') {
                 return "gold";
-                }
-                else if (cont == 'Asia') {
+            }
+            else if (cont == 'Asia') {
                 return "teal";
-                }
-                else if (cont == 'Oceania') {
-                    return "violet";
-                }
-                else if (cont == 'Europe') {
-                    return "navy";
-                }
-                return "yellow";
-            })
+            }
+            else if (cont == 'Oceania') {
+                return "violet";
+            }
+            else if (cont == 'Europe') {
+                return "navy";
+            }
+            return "yellow";
+        })
         //.on("mouseover", mouseover)
         .on("mouseover", function (event, d) {
             tooltip.style("visibility", "visible").text(d["Country Name"]);
-            tooltip.style("top", (d.pageY ) + "px")
-                .style("left", (d.pageX ) + "px");
+            tooltip.style("top", (d.pageY) + "px")
+                .style("left", (d.pageX) + "px");
         })
         .on("mousemove", function () { return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px"); })
         .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
 
     //legend
-    svg.append("circle").attr("cx",450).attr("cy",0).attr("r", 6).style("fill", "tomato")
-    svg.append("circle").attr("cx",450).attr("cy",20).attr("r", 6).style("fill", "gold")
-    svg.append("circle").attr("cx",450).attr("cy",40).attr("r", 6).style("fill", "green")
-    svg.append("circle").attr("cx",450).attr("cy",60).attr("r", 6).style("fill", "lightblue")
-    svg.append("circle").attr("cx",450).attr("cy",80).attr("r", 6).style("fill", "navy")
-    svg.append("circle").attr("cx",450).attr("cy",100).attr("r", 6).style("fill", "violet")
-    svg.append("text").attr("x", 470).attr("y", 0).text("Africa").style("font-size", "15px").attr("alignment-baseline","middle")
-    svg.append("text").attr("x", 470).attr("y", 20).text("South America").style("font-size", "15px").attr("alignment-baseline","middle")
-    svg.append("text").attr("x", 470).attr("y", 40).text("Asia").style("font-size", "15px").attr("alignment-baseline","middle")
-    svg.append("text").attr("x", 470).attr("y", 60).text("North America").style("font-size", "15px").attr("alignment-baseline","middle")
-    svg.append("text").attr("x", 470).attr("y", 80).text("Europe").style("font-size", "15px").attr("alignment-baseline","middle")
-    svg.append("text").attr("x", 470).attr("y", 100).text("Oceania").style("font-size", "15px").attr("alignment-baseline","middle")
+    svg.append("circle").attr("cx", 450).attr("cy", 0).attr("r", 6).style("fill", "tomato")
+    svg.append("circle").attr("cx", 450).attr("cy", 20).attr("r", 6).style("fill", "gold")
+    svg.append("circle").attr("cx", 450).attr("cy", 40).attr("r", 6).style("fill", "green")
+    svg.append("circle").attr("cx", 450).attr("cy", 60).attr("r", 6).style("fill", "lightblue")
+    svg.append("circle").attr("cx", 450).attr("cy", 80).attr("r", 6).style("fill", "navy")
+    svg.append("circle").attr("cx", 450).attr("cy", 100).attr("r", 6).style("fill", "violet")
+    svg.append("text").attr("x", 470).attr("y", 0).text("Africa").style("font-size", "15px").attr("alignment-baseline", "middle")
+    svg.append("text").attr("x", 470).attr("y", 20).text("South America").style("font-size", "15px").attr("alignment-baseline", "middle")
+    svg.append("text").attr("x", 470).attr("y", 40).text("Asia").style("font-size", "15px").attr("alignment-baseline", "middle")
+    svg.append("text").attr("x", 470).attr("y", 60).text("North America").style("font-size", "15px").attr("alignment-baseline", "middle")
+    svg.append("text").attr("x", 470).attr("y", 80).text("Europe").style("font-size", "15px").attr("alignment-baseline", "middle")
+    svg.append("text").attr("x", 470).attr("y", 100).text("Oceania").style("font-size", "15px").attr("alignment-baseline", "middle")
 
     var yAxis = d3.axisLeft(ys).ticks(10).tickFormat(d3.format("~s"));
     svg.append("g").call(yAxis);
@@ -156,9 +156,9 @@ async function loadData( region ) {
 
     // create a tooltip
     var tooltip = d3.select("#chart")
-     .append("div")
-       .style("position", "absolute")
-     .style("visibility", "hidden")
+        .append("div")
+        .style("position", "absolute")
+        .style("visibility", "hidden")
 
 
 }
@@ -172,8 +172,8 @@ function regionize(d, region) {
 }
 
 function updateChart(cont) {
-    var dataCont = d3.nest().key( function (d) {
-      return (d["Continent"] );//== cont)
+    var dataCont = d3.nest().key(function (d) {
+        return (d["Continent"]);//== cont)
     })
-    .entries(cont[0]);
-  }
+        .entries(cont[0]);
+}
