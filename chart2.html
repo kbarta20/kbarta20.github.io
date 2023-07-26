@@ -10,6 +10,7 @@
 
   .box {
     display: inline-block;
+    border-radius: 20px;
     width: 80px;
     height: 30px;
     border: 1px solid black;
@@ -18,31 +19,39 @@
     margin: 0;
     padding: 0;
     cursor: pointer;
+    background-color: lightskyblue;
+    box-shadow: 5px 5px 5px lightblue;
   }
 </style>
 
 <body>
   <h1> World Sustainability Dataset </h1>
 
-  <h2> Carbon Dioxide Damage in Europe and Sub-Saharan Africa</h2>
-  <p>How does carbon dioxide damage relate to income in different regions?
-    This chart compares carbon dioxide damage vs income in 2 different regions: Europe/Northern America and Sub-saharan
-    Africa.
-    These regions have very different histories in terms of development..
-  </p>
+  <h2> Carbon Dioxide Damage in Europe/Northern America and Sub-Saharan Africa</h2>
+
   <div name="annotation" opacity=1>
 
   </div>
   <div id="chart"></div>
 
-  <p> This chart shows a scatterplot of carbon dioxide damage savings
-    and GDP per capita of countries in North America.
-    The size of the circle corresponds to the population of the country.
+  <p>How does carbon dioxide damage relate to income in different regions?
+    This chart compares carbon dioxide damage vs income in 2 different regions: Europe/Northern America and Sub-saharan
+    Africa.
+    These regions have very different histories in terms of development, which no doubt has had an effect on their costs
+    associated with carbon dioxide damage.
 
   </p>
   <div class="box" id="box1">Chart 1</div>
   <div class="box" id="box2">Current</div>
-  <div class="box" id="box3">Chart 3</div>
+  <div class="box" id="box3">Next Chart</div>
+
+  <p>
+    <br>
+    Data Source: World Bank https://data.worldbank.org <br>
+    All data used is from 2018.
+    <br>
+
+  </p>
   <script>
 
     const annotations = [
@@ -51,14 +60,13 @@
           label: "Many, but not all, European/Northern American countries have higher CO2 damage costs than Sub-Saharan African countries.",
           //  title: 
         },
-        x: 200,
-        y: 200,
-        dy: -100,
-        dx: 200
+        x: 430,
+        y: 400,
+        dy: -150,
+        dx: 50
 
       }
     ]
-
 
     async function loadData() {
       // Set up the chart dimensions
@@ -67,7 +75,7 @@
       var height = 500 - margin.top - margin.bottom;
 
       const makeAnnotations = d3.annotation()
-        .annotations(annotations)
+        .annotations(annotations);
 
       // Create the SVG element
       var svg = d3
@@ -81,19 +89,13 @@
 
       // Load the CSV file
       const data = await d3.csv('https://kbarta20.github.io/WorldSustainabilityDataset.csv', d3.autoType);
-      // Convert numerical values from strings to numbers
       const dataArray = Object.values(data);
-      //const dataArray = Array.from(data, ([key,value]) => value);
       data.sort((a, b) => d3.descending(a["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"], b["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]));
-      //console.log(dataArray);
-      //console.log(data)
       var dataArrayF = dataArray.filter(filtered);
-      console.log(dataArrayF)
       dataArrayF.forEach(function (d) {
         d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"] = +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
       });
 
-      //add annotation
 
       // Set up the scales
       var xScale = d3
@@ -111,20 +113,6 @@
           return d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"];
         })]);
 
-
-
-      // var tooltip = d3.select("body")
-      //   .append("div")
-      // .style("visibility", "hidden");
-
-      // create a tooltip
-      var tooltip = d3.select("#chart")
-        .append("div")
-        //.style("top", (d3.event.pageY-200)+"px")
-        //.style("left", (d3.event.pageX-100)+"px")
-        .style("position", "absolute")
-        .style("visibility", "hidden")
-        .style("background", "white")
       // Create the bars
       svg
         .selectAll(".bar")
@@ -158,7 +146,17 @@
         })
         .on("mousemove", function () { return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px"); })
         .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
-      ;
+
+
+      // create a tooltip
+      var tooltip = d3.select("#chart")
+        .append("div")
+        //.style("top", (d3.event.pageY-200)+"px")
+        //.style("left", (d3.event.pageX-100)+"px")
+        .style("position", "absolute")
+        .style("visibility", "hidden")
+        .style("background", "white");
+
       // Add axes
       svg
         .append("g")
@@ -178,12 +176,20 @@
 
       svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left + 10)
+        .attr("y", 0 - margin.left)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("Adjusted savings: carbon dioxide damage (% of GNI)");
 
+
+      var x = 200;
+      var x1 = x + 10;
+
+      svg.append("circle").attr("cx", x).attr("cy", 0).attr("r", 6).style("fill", "tomato");
+      svg.append("circle").attr("cx", x).attr("cy", 20).attr("r", 6).style("fill", "navy");
+      svg.append("text").attr("x", x1).attr("y", 0).text("Sub-Saharan Africa").style("font-size", "15px").attr("alignment-baseline", "middle");
+      svg.append("text").attr("x", x1).attr("y", 20).text("Europe/Northern America").style("font-size", "15px").attr("alignment-baseline", "middle");
 
 
       // add click event  to the boxes
@@ -206,8 +212,8 @@
 
     }
     function filtered(dataArr) {
-      return (dataArr['Year'] == '2018') && (dataArr['Continent'] == 'Africa')
-        || (dataArr['Continent'] == 'Europe')
+      return (dataArr['Year'] == '2018') && ((dataArr['Continent'] == 'Africa')
+        || (dataArr['Continent'] == 'Europe'));
     }
     loadData().catch(function (error) { console.log(error); });
 

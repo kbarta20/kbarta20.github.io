@@ -1,7 +1,7 @@
 
 async function loadData(region) {
 
-    console.log(region);
+    // console.log(region);
     d3.selectAll("svg").remove();
     // Set up the chart dimensions
     var margin = { top: 50, right: 40, bottom: 50, left: 60 };
@@ -22,8 +22,6 @@ async function loadData(region) {
 
     if (region == "World") {
         var dataArrayF = dataArray.filter(filtered);
-        console.log("its world");
-        //        return (dataArray['Year'] == '2018') //&& (dataArr['Continent'] == reg)
     }
     else {
         console.log("now its " + region);
@@ -32,14 +30,7 @@ async function loadData(region) {
             return (da['Year'] == '2018') && (da['Continent'] == region);
         })
     }
-    // if (region !== "World") {
-    //filter by region
-    //   var newdataArrayF = dataArrayF.filter(regionize, d, region) 
-    //  return(d['Continent'] === region);
-    // )
-    //}
-    // Generate random data within the specified ranges
-    //var numDataPoints = 50;
+
     var CO2damage = dataArrayF.map(d => +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]);
     var xs = d3.scaleLinear().domain([0, 3]).range([0, width]);
 
@@ -51,14 +42,7 @@ async function loadData(region) {
     var population = dataArrayF.map(d => +d["Population, total - SP.POP.TOTL"]);
     var rs = d3.scaleLinear().domain([0, d3.max(population)]).range([5, 70]);
 
-
-    var tooltip = d3.select("body")
-        .append("div")
-        .style("visibility", "hidden");
-
-
-    svg
-        .selectAll('circle')
+    svg.selectAll('circle')
         .data(dataArrayF)
         .enter()
         .append('circle')
@@ -88,7 +72,6 @@ async function loadData(region) {
             }
             return "yellow";
         })
-        //.on("mouseover", mouseover)
         .on("mouseover", function (event, d) {
             tooltip.style("visibility", "visible").text(d["Country Name"]);
             tooltip.style("top", (d.pageY) + "px")
@@ -132,10 +115,6 @@ async function loadData(region) {
         .style("text-anchor", "middle")
         .text("GDP per capita (current US$)");
 
-
-    //Axis Labels
-
-
     //add click event to the boxes
     d3.selectAll(".box").on("click", function () {
         var boxId = d3.select(this).attr("id");
@@ -159,6 +138,7 @@ async function loadData(region) {
         .append("div")
         .style("position", "absolute")
         .style("visibility", "hidden")
+        .style("background-color", "white");
 
 
 }

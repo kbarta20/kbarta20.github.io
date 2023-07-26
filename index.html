@@ -12,14 +12,17 @@
 
     .box {
       display: inline-block;
+      background-color: lightskyblue;
       width: 80px;
       height: 30px;
+      border-radius: 20px;
       border: 1px solid black;
       text-align: center;
       line-height: 30px;
       margin: 0;
       padding: 0;
       cursor: pointer;
+      box-shadow: 5px 5px 5px lightblue;
     }
   </style>
 </head>
@@ -28,11 +31,13 @@
 
   <h1>World Sustainability Dataset</h1>
 
-  <p> This visualization explores various sustainability factors and the relationships between them.
-    Explore the charts using the boxes at the bottom of the page.
-
+  <p> This visualization explores various national sustainability and wealth factors and the relationships between them.
+   <br> Explore the charts using the boxes at the bottom of the page.
+<br>
     Explore the current chart by selecting a Continent or World.
   </p>
+
+  <h2>Carbon Dioxide Damage Costs and GDP</h2>
 
   <div id="buttons">
     <!-- Add the seven buttons -->
@@ -46,13 +51,15 @@
 
   <div id="chart"></div>
 
-  <p> This chart shows a scatterplot of carbon dioxide damage savings
-    and GDP per capita of countries in 2018.
+  <h3>     Why do damage costs for carbon dioxide vary so widely from country to country? How does this value relate to other
+    statistics?</h3>
+  <p> 
+
+    <br>
+      This chart shows a scatterplot of carbon dioxide damage savings
+    and GDP per capita of countries in 2018. GDP is Gross Domestic Product, one of the most common ways to measure the wealth of a country.
     The size of the circle corresponds to the population of the country.
-
-    Why do damage costs for carbon dioxide vary so widely from country to country? How does this value relate to other
-    statistics?
-
+    <br><br>
     Adjusted savings: carbon dioxide damage refers to the cost of damage from carbon dioxide emissions. These emissions
     can be from fossil fuels or the manufacture of cement. The World Bank estimates that it costs US$30 per ton of CO2.
     This value gives an idea of how much carbon dioxide emissions are costing a country.
@@ -61,10 +68,13 @@
 
   </p>
   <div class="box" id="box1">Current</div>
-  <div class="box" id="box2">Chart 2</div>
-  <div class="box" id="box3">Chart 3</div>
+  <div class="box" id="box2">Next Chart</div>
 
 
+  <p>Data Source: https://data.worldbank.org/ 
+    <br>
+    All data used is from 2018.
+  </p>
   <script>
 
     loadData("World").catch(function (error) {
