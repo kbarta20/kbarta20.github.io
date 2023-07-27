@@ -1,9 +1,7 @@
 
 async function loadData(region) {
 
-    // console.log(region);
     d3.selectAll("svg").remove();
-    // Set up the chart dimensions
     var margin = { top: 50, right: 40, bottom: 50, left: 60 };
     var width = 1000 - margin.left - margin.right;
     var height = 600 - margin.top - margin.bottom;
@@ -16,8 +14,8 @@ async function loadData(region) {
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     const data = await d3.csv('https://kbarta20.github.io/WorldSustainabilityDataset.csv', d3.autoType);
-    // Convert numerical values from strings to numbers
     const dataArray = Object.values(data);
 
     if (region == "World") {
@@ -26,7 +24,6 @@ async function loadData(region) {
     else {
         console.log("now its " + region);
         var dataArrayF = dataArray.filter(function filteredR(da) {
-            //  console.log(region);
             return (da['Year'] == '2018') && (da['Continent'] == region);
         })
     }
@@ -34,7 +31,6 @@ async function loadData(region) {
     var CO2damage = dataArrayF.map(d => +d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]);
     var xs = d3.scaleLinear().domain([0, 3]).range([0, width]);
 
-    // Adjust the y-scale domain based on the actual data values for "Access to electricity"
     var electricity = dataArrayF.map(d => +d["GDP per capita (current US$) - NY.GDP.PCAP.CD"]);
     var yDomain = d3.extent(electricity); // Get the min and max values for the domain
     var ys = d3.scaleLinear().domain([yDomain[0] - 5, yDomain[1] + 5]).range([height, 0]);
@@ -46,13 +42,11 @@ async function loadData(region) {
         .data(dataArrayF)
         .enter()
         .append('circle')
-        //.attr("id", "circleTooltip")
         .attr('cx', function (d) { return xs(d["Adjusted savings: carbon dioxide damage (% of GNI) - NY.ADJ.DCO2.GN.ZS"]); })
         .attr('cy', function (d) { return ys(d["GDP per capita (current US$) - NY.GDP.PCAP.CD"]); })
         .attr('r', function (d) { return rs(d["Population, total - SP.POP.TOTL"]); })
         .attr("fill", function (d) {
             var cont = d['Continent']
-            // console.log(cont);
             if (cont == 'North America') {
                 return "lightblue";
             } else if (cont == 'Africa') {
@@ -102,8 +96,6 @@ async function loadData(region) {
 
     svg.append("text")
         .attr("transform", "translate(300,540)")
-        //.attr("x", 250)
-        //.attr("y", 200)
         .style("text-anchor", "middle")
         .text("Adjusted savings: carbon dioxide damage (% of GNI)");
 

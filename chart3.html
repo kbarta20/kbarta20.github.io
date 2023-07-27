@@ -42,7 +42,6 @@
     </p>
 
     <div id="buttons">
-        <!-- Add the seven buttons -->
         <button onclick="loadData('resources')">Natural Resources Depletion</button>
         <button onclick="loadData('consumption')">Final Consumption Expenditure</button>
     </div>
@@ -93,13 +92,10 @@
         async function loadData(y) {
 
             d3.selectAll("svg").remove();
-            //  console.log(y);
-            // Set up the chart dimensions
             var margin = { top: 50, right: 40, bottom: 50, left: 60 };
             var width = 1000 - margin.left - margin.right;
             var height = 600 - margin.top - margin.bottom;
 
-            // Create the SVG element
             var svg = d3
                 .select("#chart")
                 .append("svg")
@@ -107,8 +103,8 @@
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
             const data = await d3.csv('https://kbarta20.github.io/WorldSustainabilityDataset.csv', d3.autoType);
-            // Convert numerical values from strings to numbers
             const dataArray = Object.values(data);
             var dataArrayF = dataArray.filter(filtered);
 
@@ -120,8 +116,6 @@
                 selection = "Final consumption expenditure (% of GDP) - NE.CON.TOTL.ZS";
                 label = "Final consumption expenditure (% of GDP)";
             }
-            // Generate random data within the specified ranges
-            //var numDataPoints = 50;
             var Xincome = dataArrayF.map(d => +d["Adjusted net national income per capita (annual % growth) - NY.ADJ.NNTY.PC.KD.ZG"]);
             var xDomain = d3.extent(Xincome);
             var xs = d3.scaleLinear().domain([-24, 40]).range([0, width]);
@@ -151,7 +145,7 @@
                 .append('circle')
                 //.attr("id", "circleTooltip")
                 .attr('cx', function (d) { return xs(d["Adjusted net national income per capita (annual % growth) - NY.ADJ.NNTY.PC.KD.ZG"]); })
-                .attr('cy', function (d) { return ys(d[selection]); })//d["Adjusted net national income per capita (annual % growth) - NY.ADJ.NNTY.PC.KD.ZG"]); })
+                .attr('cy', function (d) { return ys(d[selection]); })
                 .attr('r', function (d) { return rs(d["Population, total - SP.POP.TOTL"]); })
                 .attr("fill", function (d) {
                     var cont = d['Continent'];
@@ -203,13 +197,12 @@
             var yAxis = d3.axisLeft(ys).ticks(10).tickFormat(d3.format("~s"));
             svg.append("g").call(yAxis);
 
-            var xAxis = d3.axisBottom(xs).ticks(10);//Values([0, 0.5, 1.0, 1.5, 2, 2.5, 3, 3.5, 4])//.tickFormat(d3.format("~s"));
+            var xAxis = d3.axisBottom(xs).ticks(10);
             svg.append("g").attr("transform", "translate(0," + height + ")").call(xAxis);
 
             svg.append("text")
                 .attr("transform", "translate(300,540)")
-                //.attr("x", 250)
-                //.attr("y", 200)
+              
                 .style("text-anchor", "middle")
                 .text("Adjusted net national income per capita (annual % growth) - NY.ADJ.NNTY.PC.KD.ZG");
 
@@ -221,10 +214,7 @@
                 .attr("x", 0 - (height / 2))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text(label); //"Adjusted net national income per capita (annual % growth)");
-
-
-            //Axis Labels
+                .text(label); 
 
 
             //add click event to the boxes
@@ -245,11 +235,8 @@
                 }
             });
 
-            // create a tooltip
             var tooltip = d3.select("#chart")
                 .append("div")
-                //.style("top", (d3.event.pageY-200)+"px")
-                //.style("left", (d3.event.pageX-100)+"px")
                 .style("position", "absolute")
                 .style("visibility", "hidden")
                 .style("background", "white");
